@@ -1,5 +1,9 @@
-export default function Home() {
+import styles from './splash.module.scss'
+
+export default function Splash() {
   return (
-    <h1>GoBarber</h1>
+    <div className={styles.container}>
+      <img src="/images/logo.svg" alt="logo" />
+    </div>
   )
 }

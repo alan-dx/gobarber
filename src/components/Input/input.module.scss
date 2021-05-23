@@ -1,0 +1,24 @@
+.inputContainer {
+  width: 340px;
+  height: 3.75rem;
+
+  display: flex;
+  align-items: center;
+
+  background: var(--inputs);
+  border-radius: 0.67rem;
+
+  svg {
+    margin: 0 1rem;
+  }
+
+  input {
+    flex: 1;
+    height: 100%;
+
+    background: transparent;
+    border: 0;
+    color: var(--gray-hard);
+    font-weight: 500;
+  }
+}

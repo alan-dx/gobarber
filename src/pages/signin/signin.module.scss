@@ -1,0 +1,59 @@
+.container {
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+
+  .signInBox {
+    flex: 1;
+
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h1 {
+      font-weight: 500;
+      font-size: 1.6rem;
+      margin-top: 5.3rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .inputsBox {
+      display: flex;
+      flex-direction: column;
+
+      div:not(:first-child) {
+        margin-top: 0.5rem;
+      }
+    }
+
+    button {
+      margin: 1.6rem 0;
+    }
+
+    div:last-child {
+      display: flex;
+      align-items: center;
+      margin-top: 5.3rem;
+
+      color: var(--orange);
+
+      svg {
+        margin-right: 1rem;
+      }
+      
+    }
+
+  }
+
+  > img {
+    height: 100vh;
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  
+}
