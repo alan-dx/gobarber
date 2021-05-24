@@ -1,9 +1,14 @@
+import { ButtonHTMLAttributes, ReactNode } from 'react'
 import styles from './action_button.module.scss'
 
-export function ActionButton() {
+interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode
+}
+
+export function ActionButton({ children }: ActionButtonProps) {
   return (
     <button className={styles.buttonContainer}>
-      <strong>Entrar</strong>
+      {children}
     </button>
   )
 }

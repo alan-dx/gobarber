@@ -1,15 +1,22 @@
-import { InputHTMLAttributes, ReactElement } from 'react'
+import { forwardRef, ForwardRefRenderFunction, InputHTMLAttributes, ReactElement } from 'react'
+import { FieldError } from 'react-hook-form'
 import styles from './input.module.scss'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  icon?: ReactElement
+  icon?: ReactElement,
+  errors?: FieldError
 }
 
-export function Input({icon ,...rest}: InputProps) {
+const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({icon, errors = null, ...rest}, ref) => {
   return (
-    <div className={styles.inputContainer}>
-      {icon}
-      <input {...rest} />
-    </div>
+    <>
+      <div className={styles.inputContainer}>
+        {icon}
+        <input {...rest} ref={ref} />
+        <label className={styles.errorLabel} htmlFor={rest.name}>{errors?.message}</label>
+      </div>
+    </>
   )
 }
+
+export const Input = forwardRef(InputBase)

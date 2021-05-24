@@ -4,6 +4,7 @@
 
   display: flex;
   align-items: center;
+  position: relative;
 
   background: var(--inputs);
   border-radius: 0.67rem;
@@ -21,4 +22,19 @@
     color: var(--gray-hard);
     font-weight: 500;
   }
+
+  .errorLabel {
+    font-size: 0.6rem;
+    line-height: 115%;
+
+    color: var(--orange);
+    background: var(--background);
+    border-radius: 0.3rem;
+
+    position: absolute;
+    padding: 0 0.2rem;
+    top: -0.30rem;
+    left: 0.8rem;
+  }
+
 }
