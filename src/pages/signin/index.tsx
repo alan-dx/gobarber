@@ -19,12 +19,18 @@ const SignInFormSchema = yup.object().shape({
 
 export default function SignIn() {
 
+  const { sign } = {
+    sign: (values) => {
+      console.log(values)
+    }
+  }
+
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(SignInFormSchema)
   })
 
   const handleSignIn: SubmitHandler<SignInData> = (values) => {
-    console.log(values)
+    sign(values)
   }
 
   return (
@@ -32,7 +38,7 @@ export default function SignIn() {
       <div className={styles.signInBox} >
         <img src="/images/logo.svg" alt="logo" />
         <h1>Faça seu login</h1>
-        <form onSubmit={handleSubmit(handleSignIn)} >
+        <form onSubmit={handleSubmit(handleSignIn)} data-testid="form-signin" >
           <div className={styles.inputsBox}>
             <Input
               type="email"
@@ -49,9 +55,7 @@ export default function SignIn() {
               {...register('password')}
             />
           </div>
-          <ActionButton type="submit" >
-            <strong>Entrar</strong>
-          </ActionButton>
+          <ActionButton type="submit" text="Entrar" />
         </form>
         <NextLink href="/signup">Esqueci minha senha</NextLink>
         <div>

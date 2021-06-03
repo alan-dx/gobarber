@@ -13,7 +13,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({icon
       <div className={styles.inputContainer}>
         {icon}
         <input {...rest} ref={ref} />
-        <label className={styles.errorLabel} htmlFor={rest.name}>{errors?.message}</label>
+        <label data-testid="label-error" className={styles.errorLabel} htmlFor={rest.name}>{errors?.message}</label>
       </div>
     </>
   )
