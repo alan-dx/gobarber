@@ -1,0 +1,83 @@
+//tamanho
+//posicao
+//estilo
+
+.container {
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+
+  > img {
+    height: 100vh;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  .signUpBox {
+    flex: 1;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      height: 9rem;
+      width: 230px;
+    }
+
+    .userTypeBox {
+      display: flex;
+
+      justify-content: center;
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+
+      button {
+        background: transparent;
+        border: 0;
+
+        color: var(--white);
+
+        &.active {
+          border-bottom: 2px solid var(--orange);
+        }
+      }
+
+      > button {
+        margin-right: 1rem;
+      }
+
+    }
+
+    .inputsBox {
+      
+      div:not(:first-child) {
+        margin-top: 0.5rem;
+      }
+
+    }
+
+    > button {
+      margin-top: 0.5rem;
+    }
+
+    .goBack {
+      display: flex;
+      
+      align-items: center;
+      margin-top: 3rem;
+
+      color: var(--white);
+
+      svg {
+        margin-right: 1rem;
+      }
+      
+    }
+
+  }
+
+}
