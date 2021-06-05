@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useState } from 'react'
+import { createContext, ReactNode, useCallback, useEffect, useState } from 'react'
 import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import Router from 'next/router'
 import { api } from '../services/api'
@@ -36,6 +36,27 @@ export function signOut() {
 export function AuthProvider({children}: AuthProviderProps) {
 
   const [user, setUser] = useState<User>(null)
+
+  useEffect(() => {
+    const { '@gobarber.token': token } = parseCookies()
+
+    if (token) {
+      api.get('/me')
+      .then(response => {
+        const { email, permissions, roles } = response.data
+
+        setUser({
+          email,
+          permissions,
+          roles
+        }) 
+
+      })
+      .catch(err => {
+        signOut()
+      })
+    }
+  }, [])
 
   const signIn = useCallback(async ({email, password}: SignInCredentials) => {
 
