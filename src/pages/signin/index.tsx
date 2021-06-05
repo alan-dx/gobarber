@@ -6,6 +6,8 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import NextLink from 'next/link'
+import { useContext } from 'react'
+import { AuthContext } from '../../contexts/AuthContext'
 
 type SignInData = {
   email: string;
@@ -19,18 +21,14 @@ const SignInFormSchema = yup.object().shape({
 
 export default function SignIn() {
 
-  const { sign } = {
-    sign: (values) => {
-      console.log(values)
-    }
-  }
+  const {signIn} = useContext(AuthContext)
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(SignInFormSchema)
   })
 
   const handleSignIn: SubmitHandler<SignInData> = (values) => {
-    sign(values)
+    signIn(values)
   }
 
   return (

@@ -1,6 +1,7 @@
-import { forwardRef, ForwardRefRenderFunction, InputHTMLAttributes, ReactElement } from 'react'
+import { forwardRef, ForwardRefRenderFunction, InputHTMLAttributes, memo, ReactElement } from 'react'
 import { FieldError } from 'react-hook-form'
 import styles from './input.module.scss'
+import lodash from 'lodash'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?: ReactElement,
