@@ -6,6 +6,6 @@ export default function Dashboard() {
   const { user } = useContext(AuthContext)
 
   return (
-    <p>Dashboard, {user.email}</p>
+    <p>Dashboard, {user?.email}</p>
   )
 }
