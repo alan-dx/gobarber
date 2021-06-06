@@ -9,8 +9,6 @@ export default function Splash() {
   )
 }
 
-
-
 export const getServerSideProps = withSSRGuest(async (ctx) => {
 
   return {

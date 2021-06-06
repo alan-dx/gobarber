@@ -9,7 +9,7 @@ export function withSSRAuth(fn: GetServerSideProps) {
     
     const cookies = parseCookies(ctx)
 
-    if(!cookies['@gobarber.token']) {
+    if(!cookies['@gobarber.token']) {//fazer dupla verificação qnd implementar o OAuth
       return {
         redirect: {
           destination: '/signin',
@@ -17,7 +17,6 @@ export function withSSRAuth(fn: GetServerSideProps) {
         }
       }
     }
-
 
     try {
       return await fn(ctx)
