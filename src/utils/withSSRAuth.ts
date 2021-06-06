@@ -1,9 +1,16 @@
 import { AuthTokenError } from './../services/errors/AuthTokenError';
 import { parseCookies, destroyCookie } from 'nookies';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next";
+import decode from 'jwt-decode'
+import validatePermissions from './validatePermissions';
+
+type withSSRAuthOptions = {
+  roles?: string[]
+}
 
 // manages the application for authenticated users
-export function withSSRAuth(fn: GetServerSideProps) {
+export function withSSRAuth(fn: GetServerSideProps, options?: withSSRAuthOptions) {
+  console.log('xxx')
 
   return async (ctx: GetServerSidePropsContext):Promise<GetServerSidePropsResult<unknown>> => {
     
@@ -16,6 +23,26 @@ export function withSSRAuth(fn: GetServerSideProps) {
           permanent: false
         }
       }
+    }
+
+    if (options) {
+      const { roles } = options
+      const user = decode<{ roles: string[] }>(cookies['@gobarber.token'])
+
+      const userHasPermission = validatePermissions({
+        user,
+        roles
+      })
+
+      if (!userHasPermission) {
+        return {
+          redirect: {
+            destination: `${user.roles[0]}`,
+            permanent: false
+          }
+        }
+      }
+
     }
 
     try {

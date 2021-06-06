@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next"
 import Router from "next/router"
 import { parseCookies } from "nookies"
 import { useContext, useEffect } from "react"
+import { Header } from "../../../components/Header"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { withSSRAuth } from "../../../utils/withSSRAuth"
 
@@ -10,7 +11,7 @@ export default function Dashboard() {
   const { user } = useContext(AuthContext)
 
   return (
-    <p>Dashboard Cliente, {user?.email}</p>
+    <Header />
   )
 }
 
@@ -23,4 +24,6 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
 
     }
   }
+},{
+  roles: ['client']
 })

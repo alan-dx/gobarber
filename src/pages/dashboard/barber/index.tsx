@@ -1,17 +1,27 @@
-import { GetServerSideProps } from "next"
-import Router from "next/router"
-import { parseCookies } from "nookies"
 import { useContext, useEffect } from "react"
+import { Header } from "../../../components/Header"
 import { AuthContext } from "../../../contexts/AuthContext"
-import { api } from "../../../services/api"
 import { withSSRAuth } from "../../../utils/withSSRAuth"
+import styles from './barber.module.scss'
 
 export default function Dashboard() {
   
   const { user } = useContext(AuthContext)
 
   return (
-    <p>Dashboard Barbeiro, {user?.email}</p>
+    <>
+      <Header />
+      <div className={styles.container} >
+        <main>
+          <h1>Horários agendados</h1>
+        </main>
+        <aside>
+          <div className={styles.calenderBox}>
+            <p>AAA</p>
+          </div>
+        </aside>
+      </div>
+    </>
   )
 }
 
@@ -22,4 +32,6 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
 
     }
   }
+}, {
+  roles: ['barber']
 })

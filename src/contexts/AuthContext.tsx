@@ -21,12 +21,14 @@ interface SignInCredentials {
 interface User {
   email: string;
   roles: string[];
-  permissions: string[]
+  permissions: string[];
+  avatar?:string
 }
 
 export const AuthContext = createContext({} as AuthContextData)
 
 export function signOut() {
+  console.log('asdasda')
   destroyCookie(undefined, '@gobarber.token')
   destroyCookie(undefined, '@gobarber.refreshToken')
 
@@ -94,7 +96,7 @@ export function AuthProvider({children}: AuthProviderProps) {
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`
   
-      Router.push("/dashboard")
+      Router.push(`/dashboard/${roles[0]}`)
     } catch (error) {
       console.log(error)
       alert('Ops! Tivemos um problema, tente novamente em alguns minutos.')
