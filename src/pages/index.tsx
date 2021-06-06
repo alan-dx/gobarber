@@ -1,3 +1,4 @@
+import { withSSRGuest } from '../utils/withSSRGuest'
 import styles from './splash.module.scss'
 
 export default function Splash() {
@@ -7,3 +8,15 @@ export default function Splash() {
     </div>
   )
 }
+
+
+
+export const getServerSideProps = withSSRGuest(async (ctx) => {
+
+  return {
+    redirect: {
+      destination: '/signin',
+      permanent: false
+    }
+  }
+})

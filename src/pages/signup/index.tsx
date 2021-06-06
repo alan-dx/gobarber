@@ -8,6 +8,7 @@ import { ActionButton } from '../../components/ActionButton'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import { withSSRGuest } from '../../utils/withSSRGuest'
 
 type SignUpFormData = {
   email: string;
@@ -86,3 +87,12 @@ export default function SignUp() {
     </div>
   )
 }
+
+export const getServerSideProps = withSSRGuest(async (ctx) => {
+
+  return {
+    props: {
+
+    }
+  }
+})

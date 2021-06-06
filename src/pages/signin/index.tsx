@@ -8,6 +8,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import NextLink from 'next/link'
 import { useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
+import { GetServerSideProps } from 'next'
+import { withSSRGuest } from '../../utils/withSSRGuest'
 
 type SignInData = {
   email: string;
@@ -65,3 +67,12 @@ export default function SignIn() {
     </div>
   )
 }
+
+export const getServerSideProps = withSSRGuest(async (ctx) => {
+
+  return {
+    props: {
+
+    }
+  }
+})
