@@ -1,7 +1,9 @@
 import { createContext, ReactNode, useCallback, useEffect, useState } from 'react'
 import { setCookie, parseCookies, destroyCookie } from 'nookies'
 import Router from 'next/router'
+import decode from 'jwt-decode'
 import { api } from '../services/api'
+import { nextApi } from '../services/nextApi'
 
 interface AuthProviderProps {
   children: ReactNode
@@ -18,17 +20,16 @@ interface SignInCredentials {
   password: string;
 }
 
-interface User {
+export interface User {
   email: string;
-  roles: string[];
-  permissions: string[];
-  avatar?:string
+  roles?: string[];
+  name: string;
+  avatar?: string
 }
 
 export const AuthContext = createContext({} as AuthContextData)
 
 export function signOut() {
-  console.log('asdasda')
   destroyCookie(undefined, '@gobarber.token')
   destroyCookie(undefined, '@gobarber.refreshToken')
 
@@ -42,23 +43,52 @@ export function AuthProvider({children}: AuthProviderProps) {
   useEffect(() => {
     const { '@gobarber.token': token } = parseCookies()
 
-    if (token) {
-      api.get('/me')
-      .then(response => {
-        const { email, permissions, roles } = response.data
+   if (token) {
+     
+    const { sub } = decode<{ sub: string }>(token)
 
-        setUser({
-          email,
-          permissions,
-          roles
-        }) 
+    nextApi.get('users', {
+      params: {
+        email: sub
+      }
+    }).then(response => {
+      const { avatar, email, name, roles } = response.data.user
 
+      setUser({
+        email,
+        avatar,
+        name,
+        roles
       })
-      .catch(err => {
-        signOut()
-      })
-    }
+
+    }).catch(err => {
+      signOut()
+    })
+   }
+ 
   }, [])
+
+  // useEffect(() => {//REMOVER ESSE USEEFFECT E CRIAR UMA ROTA PARA CHAMADA NO FAUNA DB, DENTRO DO WITHSSRAUTH, PARA PEGAR AS ROLES DO USUÁRIO
+  //   const { '@gobarber.token': token } = parseCookies()
+
+  //   if (token) {
+
+  //     const {} = decode<>
+
+  //     // api.get('/me')
+  //     // .then(response => {
+  //     //   const { email, roles } = response.data
+
+  //     //   setUser({
+  //     //     email,
+  //     //     roles
+  //     //   }) 
+  //     // })
+  //     // .catch(err => {
+  //     //   signOut()
+  //     // })
+  //   }
+  // }, [])
 
   const signIn = useCallback(async ({email, password}: SignInCredentials) => {
 
@@ -67,8 +97,18 @@ export function AuthProvider({children}: AuthProviderProps) {
         email,
         password
       })
+
+      //TEM QUE FAZER O SETUPAPICLINET
+
+      const faunaResponse = await nextApi.post('users', {
+        email
+      })
+
+      console.log(faunaResponse.data.user)
+
+      const { roles, name, avatar } = faunaResponse.data.user
   
-      const { token, refreshToken, permissions, roles } = response.data
+      const { token, refreshToken } = response.data
 
       setCookie(undefined, 
         "@gobarber.token",
@@ -90,8 +130,9 @@ export function AuthProvider({children}: AuthProviderProps) {
   
       setUser({
         email,
-        roles,
-        permissions
+        avatar,
+        name,
+        roles
       })
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`

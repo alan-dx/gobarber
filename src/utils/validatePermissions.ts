@@ -1,8 +1,8 @@
+import { User} from '../contexts/AuthContext'
+
 type validatePermissionsParams = {
   roles: string[];
-  user: {
-    roles: string[]
-  };
+  user: User
 }
 
 export default function validatePermissions({

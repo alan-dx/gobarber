@@ -1,12 +1,29 @@
+import Router from "next/router"
 import { useContext, useEffect } from "react"
 import { Header } from "../../../components/Header"
 import { AuthContext } from "../../../contexts/AuthContext"
+import validatePermissions from "../../../utils/validatePermissions"
 import { withSSRAuth } from "../../../utils/withSSRAuth"
 import styles from './barber.module.scss'
 
 export default function Dashboard() {
   
   const { user } = useContext(AuthContext)
+
+  useEffect(() => {
+
+    if (user) {
+      const userHasPermissions = validatePermissions({
+        roles: ['barber'],
+        user
+      })
+  
+      if (!userHasPermissions) {
+        Router.push(`${user?.roles[0]}`)
+      }
+    }
+    
+  }, [user])
 
   return (
     <>
@@ -27,11 +44,11 @@ export default function Dashboard() {
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
 
+  //DA PRA USAR O GETSESSION AQ
+
   return {
     props: {
 
     }
   }
-}, {
-  roles: ['barber']
 })

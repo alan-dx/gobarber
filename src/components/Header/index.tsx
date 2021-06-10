@@ -19,7 +19,7 @@ export function Header() {
             <div className={styles.userInfo}>
                 {user?.avatar
                   ? 
-                  (<img src="https://avatars.githubusercontent.com/u/53129847?s=400&u=09c4090ca2fe13b8539e4368d5228db718396524&v=4" alt="user" />)
+                  (<img src={`${user?.avatar}`} alt="user" />)
                   :
                   (
                     <div className={styles.withoutAvatar}>
@@ -28,7 +28,7 @@ export function Header() {
                   )
                 }
               <p>Bem Vindo, <br/>
-              <strong>Alan Almeida</strong>
+              <strong>{user?.name}</strong>
               </p>
             </div>
           </Link>
