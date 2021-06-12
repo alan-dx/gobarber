@@ -11,7 +11,7 @@ interface AuthProviderProps {
 
 interface AuthContextData {
   signIn: (credentials: SignInCredentials) => Promise<void>;
-  signOut: () => void;
+  signOutMemo: () => void;
   user: User
 }
 
@@ -21,17 +21,21 @@ interface SignInCredentials {
 }
 
 export interface User {
-  email: string;
+  email?: string;
   roles?: string[];
-  name: string;
-  avatar?: string
+  name?: string;
+  image?: string
 }
 
 export const AuthContext = createContext({} as AuthContextData)
 
 export function signOut() {
-  destroyCookie(undefined, '@gobarber.token')
-  destroyCookie(undefined, '@gobarber.refreshToken')
+  destroyCookie(undefined, '@gobarber.token', {
+    path: '/'
+  })
+  destroyCookie(undefined, '@gobarber.refreshToken', {
+    path: '/'
+  })
 
   Router.push('/signin')
 }
@@ -44,6 +48,7 @@ export function AuthProvider({children}: AuthProviderProps) {
     const { '@gobarber.token': token } = parseCookies()
 
    if (token) {
+    console.log('effect')
      
     const { sub } = decode<{ sub: string }>(token)
 
@@ -52,11 +57,12 @@ export function AuthProvider({children}: AuthProviderProps) {
         email: sub
       }
     }).then(response => {
-      const { avatar, email, name, roles } = response.data.user
+      const { image, email, name, roles } = response.data.user
+      console.log('effect')
 
       setUser({
         email,
-        avatar,
+        image,
         name,
         roles
       })
@@ -68,27 +74,9 @@ export function AuthProvider({children}: AuthProviderProps) {
  
   }, [])
 
-  // useEffect(() => {//REMOVER ESSE USEEFFECT E CRIAR UMA ROTA PARA CHAMADA NO FAUNA DB, DENTRO DO WITHSSRAUTH, PARA PEGAR AS ROLES DO USUÁRIO
-  //   const { '@gobarber.token': token } = parseCookies()
-
-  //   if (token) {
-
-  //     const {} = decode<>
-
-  //     // api.get('/me')
-  //     // .then(response => {
-  //     //   const { email, roles } = response.data
-
-  //     //   setUser({
-  //     //     email,
-  //     //     roles
-  //     //   }) 
-  //     // })
-  //     // .catch(err => {
-  //     //   signOut()
-  //     // })
-  //   }
-  // }, [])
+  const signOutMemo = useCallback(() => {
+    signOut()
+  }, [])
 
   const signIn = useCallback(async ({email, password}: SignInCredentials) => {
 
@@ -104,9 +92,7 @@ export function AuthProvider({children}: AuthProviderProps) {
         email
       })
 
-      console.log(faunaResponse.data.user)
-
-      const { roles, name, avatar } = faunaResponse.data.user
+      const { roles, name, image } = faunaResponse.data.user
   
       const { token, refreshToken } = response.data
 
@@ -120,7 +106,7 @@ export function AuthProvider({children}: AuthProviderProps) {
       )
 
       setCookie(undefined,
-        "@gobarber.resfreshToken",
+        "@gobarber.refreshToken",
         refreshToken,
         {
           maxAge: 60 * 60 * 24 * 30,
@@ -130,7 +116,7 @@ export function AuthProvider({children}: AuthProviderProps) {
   
       setUser({
         email,
-        avatar,
+        image,
         name,
         roles
       })
@@ -146,7 +132,7 @@ export function AuthProvider({children}: AuthProviderProps) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{signIn, signOut, user}}>
+    <AuthContext.Provider value={{signIn, signOutMemo, user}}>
       {children}
     </AuthContext.Provider>
   )

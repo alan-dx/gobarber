@@ -1,4 +1,4 @@
-import { User} from '../contexts/AuthContext'
+import { User } from '../contexts/AuthContext'
 
 type validatePermissionsParams = {
   roles: string[];

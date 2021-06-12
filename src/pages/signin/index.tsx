@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import NextLink from 'next/link'
 import { useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
-import { GetServerSideProps } from 'next'
+import { signIn as signInOAuth, useSession, signOut } from 'next-auth/client'
 import { withSSRGuest } from '../../utils/withSSRGuest'
 
 type SignInData = {
@@ -57,6 +57,7 @@ export default function SignIn() {
           </div>
           <ActionButton type="submit" text="Entrar" />
         </form>
+        <button onClick={() => signInOAuth('google')}>Google</button>
         <NextLink href="/signup">Esqueci minha senha</NextLink>
         <div>
           <FiLogIn color="#FF9000" size={18} />

@@ -1,22 +1,18 @@
 import { parseCookies } from 'nookies';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
-import decode from 'jwt-decode'
 
 //manages the application for visiting users 
 export function withSSRGuest(fn: GetServerSideProps) {
-  console.log('sdad')
   
   return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<any>> => {
-
+    
     const cookies = parseCookies(ctx)
-
-    if (cookies['@gobarber.token']) {
-
-      const user = decode<{permissions: string[], roles: string[]}>(cookies['@gobarber.token'])
+    
+    if (cookies['@gobarber.token'] || cookies['next-auth.session-token']) {
 
       return {
         redirect: {
-          destination: `/dashboard/${user.roles[0]}`,
+          destination: `/dashboard/client`,//TENTAR OTIMIZAR ISSO CRIANDO A TELA DE DASHBOARD, COM UM LOADING, E VERIFICAR LÁ PRA QUAL TELA O USUÁRIO DEVE SER DIRECIONADO
           permanent: false
         }
       }

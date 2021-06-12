@@ -3,10 +3,20 @@ import styles from './header.module.scss'
 import { FiPower, FiUser } from 'react-icons/fi'
 import { useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
+import { signOut } from 'next-auth/client'
 
-export function Header() {
+interface HeaderProps {
+  userOAuth?: {
+    name: string,
+    email: string,
+    image: string;
+    roles?:string[]
+  } 
+}
 
-  const { signOut, user } = useContext(AuthContext)
+export function Header({userOAuth}: HeaderProps) {
+
+  const { signOutMemo, user } = useContext(AuthContext)
 
   return (
     <header className={styles.container} >
@@ -17,9 +27,9 @@ export function Header() {
         <nav>
           <Link href="/me">
             <div className={styles.userInfo}>
-                {user?.avatar
+                {user?.image || userOAuth?.image
                   ? 
-                  (<img src={`${user?.avatar}`} alt="user" />)
+                  (<img src={`${user?.image || userOAuth?.image}`} alt="user" />)
                   :
                   (
                     <div className={styles.withoutAvatar}>
@@ -28,11 +38,17 @@ export function Header() {
                   )
                 }
               <p>Bem Vindo, <br/>
-              <strong>{user?.name}</strong>
+              <strong>{user?.name || userOAuth?.name}</strong>
               </p>
             </div>
           </Link>
-          <button onClick={() => signOut()}>
+          <button onClick={() => {
+            if (userOAuth) {
+              signOut()
+            } else if (user) {
+              signOutMemo()
+            }
+          }}>
             <FiPower color="#999591" size={20} />
           </button>
         </nav>

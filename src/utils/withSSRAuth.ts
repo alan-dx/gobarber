@@ -1,22 +1,24 @@
+import { Session } from 'next-auth'
 import { nextApi } from './../services/nextApi';
 import { AuthTokenError } from './../services/errors/AuthTokenError';
 import { parseCookies, destroyCookie } from 'nookies';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import decode from 'jwt-decode'
 import validatePermissions from './validatePermissions';
+import { GetSessionOptions } from 'next-auth/client';
 
 type withSSRAuthOptions = {
-  roles?: string[]
+  roles?: string[],
 }
 
 // manages the application for authenticated users
 export function withSSRAuth(fn: GetServerSideProps, options?: withSSRAuthOptions) {
 
   return async (ctx: GetServerSidePropsContext):Promise<GetServerSidePropsResult<unknown>> => {
-    
+
     const cookies = parseCookies(ctx)
 
-    if(!cookies['@gobarber.token']) {//fazer dupla verificação qnd implementar o OAuth
+    if(!cookies['@gobarber.token'] && !cookies['next-auth.session-token']) {
       return {
         redirect: {
           destination: '/signin',
@@ -26,6 +28,7 @@ export function withSSRAuth(fn: GetServerSideProps, options?: withSSRAuthOptions
     }
 
     try {
+
       return await fn(ctx)
     } catch (error) {
       console.log(error)

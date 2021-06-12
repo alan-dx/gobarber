@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/client"
 import Router from "next/router"
 import { useContext, useEffect } from "react"
 import { Header } from "../../../components/Header"
@@ -5,33 +6,57 @@ import { AuthContext } from "../../../contexts/AuthContext"
 import validatePermissions from "../../../utils/validatePermissions"
 import { withSSRAuth } from "../../../utils/withSSRAuth"
 
-export default function Dashboard() {
+interface DashboardBarberProps {
+  userOAuth: {
+    name: string,
+    email: string,
+    image: string;
+    roles?:string[]
+  } 
+}
+
+export default function DashboardClient({userOAuth}:DashboardBarberProps) {
   
   const { user } = useContext(AuthContext)
 
   useEffect(() => {
 
-    if (user) {
+    if (user || userOAuth) {
       const userHasPermissions = validatePermissions({
         roles: ['client'],
-        user
+        user: user || userOAuth
       })
   
       if (!userHasPermissions) {
-        Router.push(`${user?.roles[0]}`)
+        Router.push(`${user?.roles[0] || userOAuth.roles[0]}`)
       }
     }
     
-  }, [user])
+  }, [user, userOAuth])
 
   return (
-    <Header />
+    <Header userOAuth={userOAuth} />
   )
 }
 
 export const getServerSideProps = withSSRAuth(async (ctx) => {
 
-  console.log('eu sou um usuário autenticado')
+  const session = await getSession(ctx) as any
+  
+  if (session) {
+    const userOAuth = {
+      name: session.user.name,
+      email: session.user.email,
+      image: session.user.image,
+      roles: session.userData.data.roles
+    }
+  
+    return {
+      props: {
+        userOAuth
+      }
+    }
+  }
 
   return {
     props: {
@@ -39,3 +64,4 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
     }
   }
 })
+
